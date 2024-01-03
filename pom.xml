@@ -1,4 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- changes made-->
+You are given an integer array matchsticks where matchsticks[i] is the length 
+of the ith matchstick.
+You want to use all the matchsticks to make one square. 
+You should not break any stick, but you can link them up, and each matchstick 
+must be used exactly one time.
+
+Return true if you can make this square and false otherwise.
+input format = integer n size of array
+               n number of space seperated integers
+output format = true or false
+example 1:
+input = 5
+1 1 2 2 2
+output = true
+explanation :You can form a square with length 2, one side of the square came 
+two sticks with length 1
+eample 2 :
+input = 5
+3 3 3 3 4
+output = false
+explanation :You cannot find a way to form a square with all the matchsticks.
+*/
+
+import java.util.*;
+
+class SquareFormation {
+    public boolean makesquare(int[] nums) {
+        if (nums == null || nums.length < 4) {
+            return false;
+        }
+
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+
+        if (sum % 4 != 0) {
+            return false;
+        }
+
+        Arrays.sort(nums);
+        reverse(nums);
+
+        return makesquare(nums, new int[4], sum / 4, 0);
+    }
+
+    private boolean makesquare(int[] nums, int[] sums, int target, int index) {
+        if (index == nums.length) {
+            return sums[0] == target && sums[1] == target && sums[2] == target;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            if (sums[i] + nums[index] > target) {
+                continue;
+            }
+            sums[i] += nums[index];
+            if (makesquare(nums, sums, target, index + 1)) {
+                return true;
+            }
+            sums[i] -= nums[index];
+        }
+
+        return false;
+    }
+
+    private void reverse(int[] nums) {
+        int start = 0;
+        int end = nums.length - 1;
+
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] ar = new int[n];
+        for (int i = 0; i < n; i++) {
+            ar[i] = sc.nextInt();
+        }
+
+        System.out.println(new SquareFormation().makesquare(ar));
+    }
+}
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
